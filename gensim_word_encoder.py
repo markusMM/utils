@@ -5,6 +5,8 @@
 Created on Thu Jan 31 13:51:08 2019
 @author: Markus.Meister
 """
+import glob
+import sys
 import os
 import torch
 import pandas as pd
@@ -12,6 +14,15 @@ import numpy as np
 from nltk import word_tokenize as tkn
 import gensim 
 from gensim import corpora, models, similarities
+
+try:
+    cd_here = glob.glob('')
+except Exception as e:
+    print(e)
+    cd_here = []
+if 'utils' in cd_here:
+    sys.path.append('utils')
+
 import scii_funs
 
 class key_word_encoder:
