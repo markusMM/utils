@@ -86,14 +86,15 @@ class key_word_encoder:
         
         for j,d in enumerate(my_dictionary):
             
-            topN = self.wordinfo.most_similar(d,topn=n_most_similar)[:n_most_similar]
-            topNten[j] = torch.tensor([self.wordinfo[sim] for sim in topN])
+            topN = self.wordinfo.wv.most_similar(d,topn=n_most_similar)#[:n_most_similar]
+            topNlist = np.array([self.wordinfo[sim[0]] for sim in topN])
+            topNten[j] = torch.from_numpy(topNlist)
             
-            wordTensors[j] = torch.tensor()
+            wordTensors[j] = torch.from_numpy(self.wordinfo[d])
         
         return {
                 'tensor':wordTensors,
-                'tpoN':topNten,
+                'topN':topNten,
                 'iids':my_iids,
                 'dictionary':my_dictionary,
                 }

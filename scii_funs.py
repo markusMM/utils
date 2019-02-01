@@ -18,10 +18,12 @@ all_letters = string.ascii_letters + " .,;'"
 def unfold_lists(lists):
     new_list = []
     new_iids = []
-    for l,li in enumerate(list):
-        this_Nlst = len(li)
-        this_iids = (np.ones([this_Nlst],dtype=np.int64)*l).tolist()
-        
+    for l,li in enumerate(lists):
+        for ent in li:
+            new_list.append(ent)
+            new_iids.append(l)
+    
+    return new_list, new_iids
         
     
         
