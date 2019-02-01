@@ -93,7 +93,7 @@ class key_word_encoder:
         
         return {
                 'tensor':wordTensors,
-                'tpoN':top3ten,
+                'tpoN':topNten,
                 'iids':my_iids,
                 'dictionary':my_dictionary,
                 }
