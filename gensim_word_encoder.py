@@ -74,7 +74,7 @@ class key_word_encoder:
         if not hasattr(self,'worinfo'):
             self.encode()
         
-        my_dictionary, my_iids = scii_funs.split_query_seq(self.diction)
+        my_dictionary, my_iids = scii_funs.unfold_lists(self.diction)
         my_dictionary = np.array(my_dictionary)
         my_iids = np.array(my_iids)
         
@@ -82,7 +82,7 @@ class key_word_encoder:
         topNten = torch.zeros([my_dictionary.shape[0], n_most_similar, self.quote_size])
         wordTensors = torch.zeros([my_dictionary.shape[0], self.quote_size])
         
-        #----------------------------- word -----------------------------------------
+        #----------------------------- words ----------------------------------------
         
         for j,d in enumerate(my_dictionary):
             

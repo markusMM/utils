@@ -14,6 +14,17 @@ import numpy as np
 all_letters = string.ascii_letters + " .,;'"
 #%% -- functions --
 
+# unfolder for list series
+def unfold_lists(lists):
+    new_list = []
+    new_iids = []
+    for l,li in enumerate(list):
+        this_Nlst = len(li)
+        this_iids = (np.ones([this_Nlst],dtype=np.int64)*l).tolist()
+        
+        
+    
+        
 # split words in sequence
 def split_query_seq(words,delim=' '):
     new_wrds = []
