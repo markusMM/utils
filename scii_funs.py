@@ -82,11 +82,11 @@ def lineSeqToTensor(lines):
     for l in lines:
         if mx_length < len(l):
             mx_length = len(l)
-    my_tensor_seq = torch.zeros( len(lines), mx_length, len(all_letters))
+    my_tensor_seq = torch.zeros( len(lines), mx_length, 1, len(all_letters))
     for l,line in enumerate(lines):
         this_tensor = lineToTensor(line)
-        this_length = this_tensor.size[0]
-        my_tensor = torch.zeros( mx_length, len(all_letters) )
+        this_length = this_tensor.size()[0]
+        my_tensor = torch.zeros( mx_length, 1, len(all_letters) )
         my_tensor[:this_length] = this_tensor
         my_tensor_seq[l] = my_tensor
     return my_tensor_seq
