@@ -24,15 +24,13 @@ def unfold_lists(lists):
             new_iids.append(l)
     
     return new_list, new_iids
-        
-    
-        
+
 # split words in sequence
-def split_query_seq(words,delim=' '):
+def split_query_seq(words, delim=' ', stop_words=[]):
     new_wrds = []
     new_iids = []
     for j,wrd in enumerate(words):
-        this_wrds = wrd.split(delim)
+        this_wrds = list(filter(lambda j: j not in stop_words, wrd.split(delim)))
         this_nowd = len(this_wrds)
         this_iids = (np.ones([this_nowd],dtype=np.int64)*j).tolist()
         for j in range(this_nowd):
@@ -63,17 +61,17 @@ def letterToIndex(letter):
     return all_letters.find(letter)
 
 # Just for demonstration, turn a letter into a <1 x n_letters> Tensor
-def letterToTensor(letter):
+def letterToTensor(char):
     tensor = torch.zeros(1, len(all_letters))
-    tensor[0][letterToIndex(letter)] = 1
+    tensor[0][letterToIndex(char)] = 1
     return tensor
 
 # Turn a line into a <line_length x 1 x n_letters>,
 # or an array of one-hot letter vectors
 def lineToTensor(line):
-    tensor = torch.ones(len(line), 1, len(all_letters))*(-1.0)
-    for li, letter in enumerate(line):
-        tensor[li][0][letterToIndex(letter)] = 1
+    tensor = torch.ones(len(line), 1, len(all_letters))*(0.0)
+    for c, char in enumerate(line):
+        tensor[c][0][letterToIndex(char)] = 1
     return tensor
 
 # turn a sequence of words into a sequence of tensors
