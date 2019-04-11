@@ -12,7 +12,9 @@ import string
 import unicodedata
 import numpy as np
 from nltk.stem.snowball import SnowballStemmer
+from nltk.tokenize import RegexpTokenizer
 
+# stemmers for words
 stemmEN = SnowballStemmer('english')
 stemmDE = SnowballStemmer('german')
 
@@ -20,6 +22,9 @@ stemmers = {
         'en' : stemmEN,
         'de' : stemmDE,
         }
+
+# tokenizer for words
+tokenizer = RegexpTokenizer(r'\w+')
 
 all_letters = string.ascii_letters + " .,;'"
 all_numbers = ''.join(list(map(lambda x: str(x),range(10))))
@@ -56,7 +61,7 @@ def split_query(word,delim=' '):
     return word.split(delim)
 
 # tokenize words in sequence
-def tok_query_seq(seq, tokenizer, stop_words=[], lemm_flg=False):
+def tok_query_seq(seq, tokenizer=tokenizer, stop_words=[], lemm_flg=False):
     new_wrds = []
     new_iids = []
     for j,wrds in enumerate(seq):
