@@ -16,6 +16,11 @@ from nltk.stem.snowball import SnowballStemmer
 stemmEN = SnowballStemmer('english')
 stemmDE = SnowballStemmer('german')
 
+stemmers = {
+        'en' : stemmEN,
+        'de' : stemmDE,
+        }
+
 all_letters = string.ascii_letters + " .,;'"
 all_numbers = ''.join(list(map(lambda x: str(x),range(10))))
 BOUND_LOW_CHARS = 26
@@ -57,7 +62,7 @@ def tok_query_seq(seq, tokenizer, stop_words=[], lemm_flg=False):
     for j,wrds in enumerate(seq):
         this_wrds = list(filter(lambda j: j not in stop_words, tokenizer.tokenize(wrds)))
         if lemm_flg:
-            this_wrds = lemm_query(this_wrds)
+            this_wrds = stem_query(this_wrds)
         this_nowd = len(this_wrds)
         this_iids = (np.ones([this_nowd],dtype=np.int64)*j).tolist()
         for j in range(this_nowd):
@@ -65,9 +70,9 @@ def tok_query_seq(seq, tokenizer, stop_words=[], lemm_flg=False):
             new_iids.append(this_iids[j])
     return new_wrds, new_iids
 
-# lemmatize query
-def lemm_query(query, nlp_lan='de'):
-    
+# stem query
+def stem_query(query, nlp_lan='de'):
+    return stemmers[nlp_lan].stem(query)
 
 # convert each element in sequence from unicode to ascii
 def u2ASCII_seq(words):
