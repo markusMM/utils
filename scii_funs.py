@@ -11,25 +11,7 @@ import torch
 import string
 import unicodedata
 import numpy as np
-from nltk.stem.snowball import SnowballStemmer
-from nltk.tokenize import RegexpTokenizer
-
-# stemmers for words
-stemmEN = SnowballStemmer('english')
-stemmDE = SnowballStemmer('german')
-
-stemmers = {
-        'en' : stemmEN,
-        'de' : stemmDE,
-        }
-
-# tokenizer for words
-tokenizer = RegexpTokenizer(r'\w+')
-
 all_letters = string.ascii_letters + " .,;'"
-all_numbers = ''.join(list(map(lambda x: str(x),range(10))))
-BOUND_LOW_CHARS = 26
-
 #%% -- functions --
 
 # unfolder for list series
@@ -60,25 +42,6 @@ def split_query_seq(words, delim=' ', stop_words=[]):
 def split_query(word,delim=' '):
     return word.split(delim)
 
-# tokenize words in sequence
-def tok_query_seq(seq, tokenizer=tokenizer, stop_words=[], lemm_flg=False):
-    new_wrds = []
-    new_iids = []
-    for j,wrds in enumerate(seq):
-        this_wrds = list(filter(lambda j: j not in stop_words, tokenizer.tokenize(wrds)))
-        if lemm_flg:
-            this_wrds = stem_query(this_wrds)
-        this_nowd = len(this_wrds)
-        this_iids = (np.ones([this_nowd],dtype=np.int64)*j).tolist()
-        for j in range(this_nowd):
-            new_wrds.append(this_wrds[j])
-            new_iids.append(this_iids[j])
-    return new_wrds, new_iids
-
-# stem query
-def stem_query(query, nlp_lan='de'):
-    return stemmers[nlp_lan].stem(query)
-
 # convert each element in sequence from unicode to ascii
 def u2ASCII_seq(words):
     for j,wrd in enumerate(words):
@@ -86,12 +49,11 @@ def u2ASCII_seq(words):
     return words
 
 # Turn a Unicode string to plain ASCII, thanks to https://stackoverflow.com/a/518232/2809427
-def unicodeToAscii(s, big_flg=False, num_flg=True):
-    limit = (1+big_flg)*BOUND_LOW_CHARS
+def unicodeToAscii(s):
     return ''.join(
         c for c in unicodedata.normalize('NFD', s)
         if unicodedata.category(c) != 'Mn'
-        and c in all_letters[:limit] + all_numbers[num_flg*10:]
+        and c in all_letters
     )
 
 # Find letter index from all_letters, e.g. "a" = 0
@@ -107,7 +69,7 @@ def letterToTensor(char):
 # Turn a line into a <line_length x 1 x n_letters>,
 # or an array of one-hot letter vectors
 def lineToTensor(line):
-    tensor = torch.zeros(len(line), 1, len(all_letters))*(0.0)
+    tensor = torch.ones(len(line), 1, len(all_letters))*(0.0)
     for c, char in enumerate(line):
         tensor[c][0][letterToIndex(char)] = 1
     return tensor
@@ -145,15 +107,6 @@ def drop_empty_queries(words,iids=[],return_iids=True):
             return my_wrds
     else:
         return my_wrds, my_iids
-
-def rm_stopwords(words, stop_words):
-    '''
-    Remove stop words from the list of words
-    '''
-    
-    filtered = filter(lambda word: word not in stop_words, words)
-    
-    return list(filtered)
 
 #%% -- unit tests --
 class TestSiiFuns(unittest.TestCase):
