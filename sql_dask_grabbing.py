@@ -26,9 +26,11 @@ def query_to_df(connectstring, query, verbose=False, chunksize=100000):
 
     """
     
-    engine = sqlalchemy.create_engine(connectstring, 
+    engine = sqlalchemy.create_engine(
+        connectstring, 
         server_side_cursors=True,
-        connect_args=sqlalchemy.make_ssl_args())
+        #connect_args=sqlalchemy.make_ssl_args()
+        )
     
     # get the data to temp chunk filese
     i = 0
